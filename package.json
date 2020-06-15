@@ -1,0 +1,13 @@
+{
+  "name": "@sequoiacapital/eslint-config-scc",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:sequoiacapital/eslint-config-scc.git",
+  "author": "Gao Sun",
+  "license": "None",
+  "files": [
+    "index.js",
+    "prettier.json"
+  ],
+  "private": false
+}
