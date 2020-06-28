@@ -29,6 +29,10 @@ module.exports = {
       },
     ],
     eqeqeq: "error",
+    curly: "error",
+    // Comment
+    "spaced-comment": "error",
+    "multiline-comment-style": "error",
     // String
     quotes: [
       "error",
@@ -57,6 +61,7 @@ module.exports = {
       },
       { blankLine: "always", prev: "*", next: "export" },
     ],
+    "padded-blocks": ["error", "never"],
     // Function
     "arrow-body-style": "error",
     "no-param-reassign": [
