@@ -21,15 +21,9 @@ module.exports = {
   rules: {
     "linebreak-style": ["error", "unix"],
     semi: ["error", "always"],
-    "comma-dangle": [
-      "error",
-      "always-multiline",
-      {
-        functions: "never",
-      },
-    ],
     eqeqeq: "error",
     curly: "error",
+    "prefer-destructuring": "error",
     // Comment
     "spaced-comment": "error",
     "multiline-comment-style": "error",
@@ -64,6 +58,7 @@ module.exports = {
     "padded-blocks": ["error", "never"],
     // Function
     "arrow-body-style": "error",
+    "prefer-arrow-callback": "error",
     "no-param-reassign": [
       "error",
       {
