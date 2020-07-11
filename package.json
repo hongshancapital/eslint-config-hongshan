@@ -11,7 +11,7 @@
     "react.js"
   ],
   "private": false,
-  "peerDependencies": {
+  "dependencies": {
     "@typescript-eslint/eslint-plugin": "^3.4.0",
     "@typescript-eslint/parser": "^3.4.0",
     "eslint": "^7.3.1",
