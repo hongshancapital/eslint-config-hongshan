@@ -5,6 +5,9 @@ module.exports = {
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript",
     "prettier/@typescript-eslint",
     "plugin:prettier/recommended",
   ],
@@ -19,6 +22,7 @@ module.exports = {
   },
   plugins: ["@typescript-eslint", "prettier"],
   rules: {
+    "import/no-named-as-default-member": "off",
     "linebreak-style": ["error", "unix"],
     semi: ["error", "always"],
     eqeqeq: "error",
@@ -114,5 +118,10 @@ module.exports = {
     ],
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/no-unnecessary-type-assertion": "error",
+  },
+  settings: {
+    "import/resolver": {
+      typescript: {},
+    },
   },
 };
