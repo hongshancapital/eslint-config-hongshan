@@ -3,7 +3,6 @@ module.exports = {
     "./index",
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
-    "@sequoiacapital/eslint-config-scc",
   ],
   parserOptions: {
     ecmaFeatures: {
