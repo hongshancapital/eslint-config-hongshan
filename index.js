@@ -108,12 +108,14 @@ module.exports = {
     "no-unneeded-ternary": "error",
     "no-nested-ternary": "error",
     // TypeScript
+    "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": [
       "error",
       {
         vars: "all",
         args: "after-used",
         ignoreRestSiblings: false,
+        varsIgnorePattern: "_",
       },
     ],
     "@typescript-eslint/no-explicit-any": "error",
