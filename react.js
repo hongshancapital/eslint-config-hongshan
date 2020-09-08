@@ -30,5 +30,6 @@ module.exports = {
     "react/jsx-sort-props": "error",
     "react/jsx-boolean-value": "error",
     "react/no-array-index-key": "error",
+    "react/jsx-no-bind": ["error", { allowArrowFunctions: true }],
   },
 };

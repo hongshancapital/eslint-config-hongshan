@@ -22,12 +22,17 @@ module.exports = {
   },
   plugins: ["@typescript-eslint", "prettier"],
   rules: {
+    // Opinionated
     "import/no-named-as-default-member": "off",
     "linebreak-style": ["error", "unix"],
     semi: ["error", "always"],
     eqeqeq: "error",
     curly: "error",
     "prefer-destructuring": "error",
+    // Removing Redundancy
+    "no-extra-bind": "error",
+    "no-extra-label": "error",
+    "no-useless-call": "error",
     // Comment
     "spaced-comment": "error",
     "multiline-comment-style": "error",
