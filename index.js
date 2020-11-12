@@ -6,7 +6,6 @@ module.exports = {
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:import/errors",
-    "plugin:import/warnings",
     "plugin:import/typescript",
     "prettier/@typescript-eslint",
     "plugin:prettier/recommended",
@@ -125,6 +124,25 @@ module.exports = {
     ],
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/no-unnecessary-type-assertion": "error",
+    // Import
+    "import/order": [
+      "error",
+      {
+        "newlines-between": "always",
+        groups: [
+          "builtin",
+          "external",
+          "internal",
+          ["parent", "sibling", "index"],
+          "object",
+        ],
+      },
+    ],
+    "import/no-dynamic-require": "error",
+    "import/no-cycle": "error", // this rule is comparatively computationally expensive, but it's good to have
+    "import/no-useless-path-segments": "error",
+    "import/export": "error",
+    "import/no-mutable-exports": "error",
   },
   settings: {
     "import/resolver": {
