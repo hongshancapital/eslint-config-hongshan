@@ -1,6 +1,6 @@
 {
   "name": "@sequoiacapital/eslint-config-scc",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "main": "index.js",
   "repository": "git@github.com:sequoiacapital/eslint-config-scc.git",
   "author": "Gao Sun",
