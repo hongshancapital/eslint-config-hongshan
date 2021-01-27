@@ -105,14 +105,6 @@ module.exports = {
     "no-multi-spaces": "error",
     "space-infix-ops": "error",
     "space-in-parens": "error",
-    "space-before-function-paren": [
-      "error",
-      {
-        anonymous: "always",
-        named: "never",
-        asyncArrow: "always",
-      },
-    ],
     "space-before-blocks": "error",
     // Tenary
     "no-unneeded-ternary": "error",
