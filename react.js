@@ -30,5 +30,7 @@ module.exports = {
     "react/jsx-boolean-value": "error",
     "react/no-array-index-key": "error",
     "react/jsx-no-bind": ["error", { allowArrowFunctions: true }],
+    "react/jsx-curly-brace-presence": "error",
+    "react/destructuring-assignment": "error",
   },
 };

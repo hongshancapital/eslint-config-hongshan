@@ -28,6 +28,7 @@ module.exports = {
     eqeqeq: "error",
     curly: "error",
     "prefer-destructuring": "error",
+    "no-unused-expressions": "error",
     // Removing Redundancy
     "no-extra-bind": "error",
     "no-extra-label": "error",
@@ -84,6 +85,11 @@ module.exports = {
       {
         selector: "CallExpression[callee.name='require']",
         message: "require is not recommended, use import instead.",
+      },
+      {
+        selector:
+          "CallExpression[callee.type='MemberExpression'] MemberExpression[property.name=/copyWithin|fill|pop|push|reverse|shift|sort|splice|unshift/]",
+        message: "DO NOT CALL MUTATING FUNCTION, THANKS.",
       },
     ],
     // Spacing
