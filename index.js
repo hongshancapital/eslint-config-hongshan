@@ -91,6 +91,11 @@ module.exports = {
           "CallExpression[callee.type='MemberExpression'] MemberExpression[property.name=/^(copyWithin|fill|pop|push|reverse|shift|sort|splice|unshift)$/]",
         message: "DO NOT CALL MUTATING FUNCTION, THANKS.",
       },
+      {
+        selector:
+          "JSXAttribute[name.name='src'][value.expression.type!='Identifier']",
+        message: "Import source file first.",
+      },
     ],
     // Spacing
     "object-curly-spacing": ["error", "always"],
