@@ -93,8 +93,8 @@ module.exports = {
       },
       {
         selector:
-          "JSXAttribute[name.name='src'][value.expression.type!='Identifier']",
-        message: "Import source file first.",
+          "JSXOpeningElement[name.name='img'] JSXAttribute[name.name='src'][value.expression.type!=/^(Identifier|CallExpression)$/]",
+        message: "Import the source file first.",
       },
     ],
     // Spacing
