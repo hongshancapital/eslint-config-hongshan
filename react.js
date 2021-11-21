@@ -32,5 +32,6 @@ module.exports = {
     "react/jsx-no-bind": ["error", { allowArrowFunctions: true }],
     "react/jsx-curly-brace-presence": "error",
     "react/destructuring-assignment": "error",
+    "react/no-deprecated": "error",
   },
 };
