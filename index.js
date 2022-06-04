@@ -7,7 +7,7 @@ module.exports = {
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:import/errors",
     "plugin:import/typescript",
-    "prettier/@typescript-eslint",
+    "prettier",
     "plugin:prettier/recommended",
   ],
   globals: {
