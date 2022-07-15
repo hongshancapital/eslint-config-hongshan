@@ -115,8 +115,8 @@ module.exports = {
     "no-unneeded-ternary": "error",
     "no-nested-ternary": "error",
     // Assign
-    'no-func-assign': 'error',
-    'no-class-assign': 'error',
+    "no-func-assign": "error",
+    "no-class-assign": "error",
     // TypeScript
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": [
@@ -133,10 +133,11 @@ module.exports = {
     "@typescript-eslint/naming-convention": [
       "error",
       {
-        "selector": "variable",
-        "format": ["camelCase", "UPPER_CASE"]
-      }
+        selector: "variable",
+        format: ["camelCase", "UPPER_CASE"],
+      },
     ],
+
     // Import
     "import/order": [
       "error",
@@ -144,8 +145,8 @@ module.exports = {
         "newlines-between": "always",
         pathGroups: [
           {
-            pattern: '@/**',
-            group: 'internal',
+            pattern: "@/**",
+            group: "internal",
           },
         ],
         groups: [
@@ -161,12 +162,12 @@ module.exports = {
     "import/no-dynamic-require": "error",
     "import/no-cycle": "error", // this rule is comparatively computationally expensive, but it's good to have
     "import/no-useless-path-segments": "error",
-    'import/no-unused-modules': [1, { unusedExports: true }],
+    "import/no-unused-modules": [1, { unusedExports: true }],
     "import/export": "error",
     "import/no-mutable-exports": "error",
-    'prefer-destructuring': 'error',
-    'prettier/prettier': 'error',
-    'no-restricted-imports': ['error', { paths: ['console'] }],
+    "prefer-destructuring": "error",
+    "prettier/prettier": "error",
+    "no-restricted-imports": ["error", { paths: ["console"] }],
   },
   settings: {
     "import/resolver": {

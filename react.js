@@ -16,9 +16,13 @@ module.exports = {
     },
   },
   rules: {
-    curly: "error",
-    "spaced-comment": "error",
-    "multiline-comment-style": "error",
+    // base
+    "no-console": ["error", { allow: ["warn", "error"] }],
+    "max-lines": ["error", { max: 490, skipComments: true }],
+    "space-before-function-paren": "off",
+    "arrow-parens": ["error", "always"],
+    "no-throw-literal": "off",
+
     // React
     "react/jsx-closing-bracket-location": ["error", "line-aligned"],
     "react/self-closing-comp": "error",
@@ -33,5 +37,15 @@ module.exports = {
     "react/jsx-curly-brace-presence": "error",
     "react/destructuring-assignment": "error",
     "react/no-deprecated": "error",
+
+    // typescript
+    "@typescript-eslint/no-throw-literal": ["error"],
+    "@typescript-eslint/no-inferrable-types": "error",
+    "@typescript-eslint/adjacent-overload-signatures": "error",
+    "@typescript-eslint/switch-exhaustiveness-check": "error",
+    "@typescript-eslint/no-unnecessary-condition": "error",
+    "@typescript-eslint/method-signature-style": "error",
+    "@typescript-eslint/no-for-in-array": "error",
+    "@typescript-eslint/no-non-null-asserted-optional-chain": "error",
   },
 };
