@@ -168,6 +168,14 @@ module.exports = {
     "prefer-destructuring": "error",
     "prettier/prettier": "error",
     "no-restricted-imports": ["error", { paths: ["console"] }],
+    // do not use global vars (such as 'status')
+    'no-restricted-globals': [
+      'error',
+      {
+        name: 'status',
+        message: 'Use local parameter instead.',
+      },
+    ],
   },
   settings: {
     "import/resolver": {
