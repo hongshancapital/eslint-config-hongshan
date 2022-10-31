@@ -119,15 +119,7 @@ module.exports = {
     "no-class-assign": "error",
     // TypeScript
     "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": [
-      "error",
-      {
-        vars: "all",
-        args: "after-used",
-        ignoreRestSiblings: false,
-        varsIgnorePattern: "_",
-      },
-    ],
+    "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/no-unnecessary-type-assertion": "error",
     "@typescript-eslint/naming-convention": [
@@ -169,11 +161,11 @@ module.exports = {
     "prettier/prettier": "error",
     "no-restricted-imports": ["error", { paths: ["console"] }],
     // do not use global vars (such as 'status')
-    'no-restricted-globals': [
-      'error',
+    "no-restricted-globals": [
+      "error",
       {
-        name: 'status',
-        message: 'Use local parameter instead.',
+        name: "status",
+        message: "Use local parameter instead.",
       },
     ],
   },
