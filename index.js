@@ -174,7 +174,11 @@ module.exports = {
       "error",
       {
         name: "status",
-        message: "Use local parameter instead.",
+        message: "Use local parameter [status] instead.",
+      },
+      {
+        name: "name",
+        message: "Use local parameter [name] instead.",
       },
     ],
   },
