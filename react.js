@@ -33,8 +33,9 @@ module.exports = {
             group: "internal",
           },
           {
-            pattern: '{.,..}/**/*.{less,css,scss}',
-            group: 'object',
+            pattern: '*.{less,css,scss}',
+            patternOptions: { matchBase: true },
+            group: 'sibling',
             position: 'after',
           },
         ],
