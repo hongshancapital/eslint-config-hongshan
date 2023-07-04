@@ -1,3 +1,4 @@
+/** @type {import('eslint').Linter.Config} */
 module.exports = {
   extends: [
     "./index",
@@ -22,6 +23,32 @@ module.exports = {
     "space-before-function-paren": "off",
     "arrow-parens": ["error", "always"],
     "no-throw-literal": "off",
+    "import/order": [
+      "error",
+      {
+        "newlines-between": "always",
+        pathGroups: [
+          {
+            pattern: "@/**",
+            group: "internal",
+          },
+          {
+            pattern: '*.{less,css,scss}',
+            patternOptions: { matchBase: true },
+            group: 'sibling',
+            position: 'after',
+          },
+        ],
+        groups: [
+          "builtin",
+          "external",
+          "type",
+          "internal",
+          ["parent", "sibling", "index"],
+          "object",
+        ],
+      },
+    ],
 
     // React
     "react/jsx-closing-bracket-location": ["error", "line-aligned"],
