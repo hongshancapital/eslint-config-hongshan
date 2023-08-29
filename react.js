@@ -29,14 +29,14 @@ module.exports = {
         "newlines-between": "always",
         pathGroups: [
           {
-            pattern: "@/**",
-            group: "internal",
-          },
-          {
             pattern: '*.{less,css,scss}',
             patternOptions: { matchBase: true },
             group: 'sibling',
             position: 'after',
+          },
+          {
+            pattern: "@/**",
+            group: "internal",
           },
         ],
         groups: [
