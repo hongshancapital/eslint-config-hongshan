@@ -1,4 +1,4 @@
-# ESLINT-CONFIG-SCC
+# ESLINT-CONFIG-HONGSHAN
 
 前后端使用到的 lint 规则
 
