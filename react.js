@@ -29,10 +29,10 @@ module.exports = {
         "newlines-between": "always",
         pathGroups: [
           {
-            pattern: '*.{less,css,scss}',
+            pattern: "*.{less,css,scss}",
             patternOptions: { matchBase: true },
-            group: 'sibling',
-            position: 'after',
+            group: "sibling",
+            position: "after",
           },
           {
             pattern: "@/**",
@@ -49,6 +49,7 @@ module.exports = {
         ],
       },
     ],
+    "import/no-duplicates": "error",
 
     // React
     "react/jsx-closing-bracket-location": ["error", "line-aligned"],
