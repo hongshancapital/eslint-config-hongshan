@@ -175,11 +175,18 @@ module.exports = {
       "error",
       {
         name: "status",
-        message: "Use local parameter [status] instead.",
+        message:
+          "Do not use global variable [status]. Use local variable instead.",
       },
       {
         name: "name",
-        message: "Use local parameter [name] instead.",
+        message:
+          "Do not use global variable [name]. Use local variable instead.",
+      },
+      {
+        name: "open",
+        message:
+          "Do not use global variable [open]. Use local variable instead.",
       },
     ],
   },
