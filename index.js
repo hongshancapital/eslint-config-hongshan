@@ -20,8 +20,16 @@ module.exports = {
     ecmaVersion: 2020,
     sourceType: "module",
   },
-  plugins: ["@typescript-eslint", "prettier", "import"],
+  plugins: ["@typescript-eslint", "prettier", "import", "no-secrets"],
   rules: {
+    'no-secrets/no-secrets': ['error', { tolerance: 5 }],
+    'no-else-return': ['error', { allowElseIf: false }],
+    'no-unreachable': 'error',
+    'import/first': 'error',
+    'import/newline-after-import': 'error',
+    'no-return-assign': ['error', 'always'],
+    'no-console': ['error', { allow: ['info', 'warn', 'error'] }],
+
     // Opinionated
     "import/no-named-as-default-member": "off",
     "linebreak-style": ["error", "unix"],

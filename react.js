@@ -65,6 +65,10 @@ module.exports = {
     "react/jsx-curly-brace-presence": "error",
     "react/destructuring-assignment": "error",
     "react/no-deprecated": "error",
+    // no need to include React after use new JSX transform
+    'react/jsx-uses-react': 'off',
+    'react/react-in-jsx-scope': 'off',
+    'react/display-name': 'off',
 
     // typescript
     "@typescript-eslint/no-throw-literal": ["error"],
