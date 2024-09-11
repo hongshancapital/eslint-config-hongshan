@@ -21,7 +21,8 @@
     "eslint-plugin-n": "^15.5.0",
     "eslint-plugin-no-secrets": "^1.0.2",
     "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-promise": "^6.0.0"
+    "eslint-plugin-promise": "^6.0.0",
+    "eslint-plugin-react": "^7.35.2"
   },
   "peerDependencies": {
     "eslint": "^8.56.0",
