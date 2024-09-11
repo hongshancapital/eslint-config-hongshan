@@ -18,7 +18,6 @@ module.exports = {
   },
   rules: {
     // base
-    "no-console": ["error", { allow: ["warn", "error"] }],
     "max-lines": ["error", { max: 490, skipComments: true }],
     "space-before-function-paren": "off",
     "arrow-parens": ["error", "always"],
