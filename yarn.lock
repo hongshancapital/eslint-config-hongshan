@@ -446,6 +446,11 @@ eslint-plugin-n@^15.5.0:
     resolve "^1.22.1"
     semver "^7.3.7"
 
+eslint-plugin-no-secrets@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-no-secrets/-/eslint-plugin-no-secrets-1.0.2.tgz#a3860d547ee3be96adc002ec72ac1c6c875278aa"
+  integrity sha512-lXjGcPS6ZMxAouYWsuX5NGsLlOWQ5c+YFHHZFECzRCZIssYQgWVPINgZqAU7caquB32MoEAL+dXRQNDBX0fgwQ==
+
 eslint-plugin-prettier@^4.0.0:
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/eslint-plugin-prettier/-/eslint-plugin-prettier-4.2.1.tgz#651cbb88b1dab98bfd42f017a12fa6b2d993f94b"

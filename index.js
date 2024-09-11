@@ -22,6 +22,14 @@ module.exports = {
   },
   plugins: ["@typescript-eslint", "prettier", "import"],
   rules: {
+    'no-secrets/no-secrets': ['error', { tolerance: 5 }],
+    'no-else-return': ['error', { allowElseIf: false }],
+    'no-unreachable': 'error',
+    'import/first': 'error',
+    'import/newline-after-import': 'error',
+    'no-return-assign': ['error', 'always'],
+    'no-console': ['error', { allow: ['info', 'warn', 'error'] }],
+
     // Opinionated
     "import/no-named-as-default-member": "off",
     "linebreak-style": ["error", "unix"],
