@@ -20,7 +20,7 @@ module.exports = {
     ecmaVersion: 2020,
     sourceType: "module",
   },
-  plugins: ["@typescript-eslint", "prettier", "import"],
+  plugins: ["@typescript-eslint", "prettier", "import", "no-secrets"],
   rules: {
     'no-secrets/no-secrets': ['error', { tolerance: 5 }],
     'no-else-return': ['error', { allowElseIf: false }],
