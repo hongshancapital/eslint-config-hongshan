@@ -20,15 +20,21 @@ module.exports = {
     ecmaVersion: 2020,
     sourceType: "module",
   },
-  plugins: ["@typescript-eslint", "prettier", "import", "no-secrets"],
+  plugins: [
+    "@typescript-eslint",
+    "prettier",
+    "import",
+    "no-secrets",
+    "./rules",
+  ],
   rules: {
-    'no-secrets/no-secrets': ['error', { tolerance: 5 }],
-    'no-else-return': ['error', { allowElseIf: false }],
-    'no-unreachable': 'error',
-    'import/first': 'error',
-    'import/newline-after-import': 'error',
-    'no-return-assign': ['error', 'always'],
-    'no-console': ['error', { allow: ['info', 'warn', 'error'] }],
+    "no-secrets/no-secrets": ["error", { tolerance: 5 }],
+    "no-else-return": ["error", { allowElseIf: false }],
+    "no-unreachable": "error",
+    "import/first": "error",
+    "import/newline-after-import": "error",
+    "no-return-assign": ["error", "always"],
+    "no-console": ["error", { allow: ["info", "warn", "error"] }],
 
     // Opinionated
     "import/no-named-as-default-member": "off",
@@ -197,6 +203,8 @@ module.exports = {
           "Do not use global variable [open]. Use local variable instead.",
       },
     ],
+    // Custom Rules
+    "no-optional-concat": "error",
   },
   settings: {
     "import/resolver": {
