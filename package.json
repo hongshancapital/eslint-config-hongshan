@@ -16,7 +16,7 @@
     "@typescript-eslint/parser": "^7.18.0",
     "eslint-config-prettier": "^8.10.0",
     "eslint-config-standard": "^17.1.0",
-    "eslint-import-resolver-typescript": "^2.7.1",
+    "eslint-import-resolver-typescript": "^3.10.1",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-n": "^15.7.0",
     "eslint-plugin-no-secrets": "^1.1.2",
@@ -29,6 +29,12 @@
     "eslint": "^8.57.1",
     "prettier": "^2.8.8",
     "typescript": "^5.4.4"
+  },
+  "resolutions": {
+    "@typescript-eslint/typescript-estree/minimatch": "^9.0.6",
+    "eslint-plugin-import/minimatch": "^3.1.5",
+    "eslint-plugin-n/minimatch": "^3.1.5",
+    "eslint-plugin-react/minimatch": "^3.1.5"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
