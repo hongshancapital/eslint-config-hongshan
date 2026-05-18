@@ -30,12 +30,6 @@
     "prettier": "^2.8.8",
     "typescript": "^5.4.4"
   },
-  "resolutions": {
-    "@typescript-eslint/typescript-estree/minimatch": "^9.0.6",
-    "eslint-plugin-import/minimatch": "^3.1.5",
-    "eslint-plugin-n/minimatch": "^3.1.5",
-    "eslint-plugin-react/minimatch": "^3.1.5"
-  },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   }
