@@ -1,36 +1,23 @@
-import eslintReact from '@eslint-react/eslint-plugin';
-import { defineConfig } from 'eslint/config';
-import reactHooks from 'eslint-plugin-react-hooks';
 import js from '@eslint/js';
+import { defineConfig } from 'eslint/config';
 import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript';
 import { importX } from 'eslint-plugin-import-x';
 import * as noSecrets from 'eslint-plugin-no-secrets';
 import prettierRecommended from 'eslint-plugin-prettier/recommended';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
-//#region prettier.json
-var prettier_default = {
-  singleQuote: true,
-  trailingComma: 'all',
-  printWidth: 100,
-  semi: true,
-  tabWidth: 2,
-  overrides: [
-    {
-      files: '.prettierrc',
-      options: { parser: 'json' },
-    },
-  ],
-};
-//#endregion
-//#region src/index.ts
+
+import prettierOptions from '../prettier.json' with { type: 'json' };
+
 const codeFiles = ['**/*.{js,mjs,jsx,ts,tsx,mts}'];
 const tsFiles = ['**/*.{ts,tsx,mts}'];
+
 const typedConfigs = tseslint.configs.recommendedTypeChecked.map((config) => ({
   ...config,
   files: tsFiles,
 }));
-const config$1 = defineConfig([
+
+const config = defineConfig([
   {
     name: '@hongshancapital/eslint-config-hongshan/ignores',
     ignores: ['node_modules/**', 'coverage/**'],
@@ -55,9 +42,15 @@ const config$1 = defineConfig([
       },
       sourceType: 'module',
     },
-    plugins: { 'no-secrets': noSecrets },
+    plugins: {
+      'no-secrets': noSecrets,
+    },
     settings: {
-      'import-x/resolver-next': [createTypeScriptImportResolver({ alwaysTryTypes: true })],
+      'import-x/resolver-next': [
+        createTypeScriptImportResolver({
+          alwaysTryTypes: true,
+        }),
+      ],
     },
     rules: {
       'no-secrets/no-secrets': ['error', { tolerance: 5 }],
@@ -77,7 +70,12 @@ const config$1 = defineConfig([
       'no-extra-label': 'error',
       'no-useless-call': 'error',
       'prefer-template': 'error',
-      'no-param-reassign': ['error', { props: true }],
+      'no-param-reassign': [
+        'error',
+        {
+          props: true,
+        },
+      ],
       'no-loop-func': 'error',
       'no-await-in-loop': 'error',
       'spaced-comment': 'error',
@@ -94,11 +92,7 @@ const config$1 = defineConfig([
           prev: ['const', 'let', 'var'],
           next: ['const', 'let', 'var'],
         },
-        {
-          blankLine: 'always',
-          prev: '*',
-          next: 'export',
-        },
+        { blankLine: 'always', prev: '*', next: 'export' },
       ],
       'no-restricted-syntax': [
         'error',
@@ -186,7 +180,9 @@ const config$1 = defineConfig([
     files: tsFiles,
     languageOptions: {
       parser: tseslint.parser,
-      parserOptions: { projectService: true },
+      parserOptions: {
+        projectService: true,
+      },
     },
     rules: {
       'no-unused-vars': 'off',
@@ -217,85 +213,10 @@ const config$1 = defineConfig([
   },
   {
     name: '@hongshancapital/eslint-config-hongshan/prettier-options',
-    rules: { 'prettier/prettier': ['error', prettier_default] },
-  },
-]);
-//#endregion
-//#region src/react.ts
-const reactFiles = ['**/*.{jsx,tsx}'];
-const reactTypeScriptFiles = ['**/*.tsx'];
-const config = defineConfig([
-  ...config$1,
-  {
-    ...eslintReact.configs['recommended-typescript'],
-    name: '@hongshancapital/eslint-config-hongshan/react-recommended',
-    files: reactFiles,
-    languageOptions: { parserOptions: { ecmaFeatures: { jsx: true } } },
-  },
-  {
-    ...reactHooks.configs.flat['recommended-latest'],
-    name: '@hongshancapital/eslint-config-hongshan/react-hooks',
-    files: reactFiles,
-  },
-  {
-    name: '@hongshancapital/eslint-config-hongshan/react-overrides',
-    files: reactFiles,
     rules: {
-      'max-lines': [
-        'error',
-        {
-          max: 490,
-          skipComments: true,
-        },
-      ],
-      'no-throw-literal': 'off',
-      'space-before-function-paren': 'off',
-      'arrow-parens': ['error', 'always'],
-      'import-x/order': [
-        'error',
-        {
-          'newlines-between': 'always',
-          pathGroups: [
-            {
-              pattern: '*.{less,css,scss}',
-              patternOptions: { matchBase: true },
-              group: 'sibling',
-              position: 'after',
-            },
-            {
-              pattern: '@/**',
-              group: 'internal',
-            },
-          ],
-          groups: [
-            'builtin',
-            'external',
-            'type',
-            'internal',
-            ['parent', 'sibling', 'index'],
-            'object',
-          ],
-        },
-      ],
-      'import-x/no-duplicates': 'error',
-      '@eslint-react/no-array-index-key': 'error',
-      '@eslint-react/no-missing-component-display-name': 'off',
-    },
-  },
-  {
-    name: '@hongshancapital/eslint-config-hongshan/react-typescript',
-    files: reactTypeScriptFiles,
-    rules: {
-      '@typescript-eslint/no-throw-literal': 'error',
-      '@typescript-eslint/no-inferrable-types': 'error',
-      '@typescript-eslint/adjacent-overload-signatures': 'error',
-      '@typescript-eslint/switch-exhaustiveness-check': 'error',
-      '@typescript-eslint/no-unnecessary-condition': 'error',
-      '@typescript-eslint/method-signature-style': 'error',
-      '@typescript-eslint/no-for-in-array': 'error',
-      '@typescript-eslint/no-non-null-asserted-optional-chain': 'error',
+      'prettier/prettier': ['error', prettierOptions],
     },
   },
 ]);
-//#endregion
-export { config as default };
+
+export default config;
