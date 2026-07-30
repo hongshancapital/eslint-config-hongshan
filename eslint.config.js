@@ -1,8 +1,7 @@
-import config from './index.js';
+import { defineConfig } from './dist/index.mjs';
 
-export default [
-  {
-    ignores: ['index.js', 'index.d.ts', 'react.js', 'react.d.ts'],
-  },
-  ...config,
-];
+export default defineConfig({
+  react: true,
+  typescript: true,
+  ignores: ['dist/**', 'tests/fixtures/**'],
+});

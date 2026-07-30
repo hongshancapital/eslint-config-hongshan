@@ -1,62 +1,88 @@
 {
   "name": "@hongshancapital/eslint-config-hongshan",
-  "version": "2.0.0",
-  "type": "module",
-  "repository": "https://github.com/hongshancapital/eslint-config-hongshan.git",
-  "author": "Gao Sun",
+  "version": "2.1.0",
+  "description": "Unified ESLint, Oxlint, and formatter configuration",
   "license": "UNLICENSED",
+  "author": "Gao Sun",
+  "repository": "https://github.com/hongshancapital/eslint-config-hongshan.git",
+  "files": [
+    "dist",
+    "prettier.json"
+  ],
+  "type": "module",
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
   "exports": {
     ".": {
-      "types": "./index.d.ts",
-      "import": "./index.js"
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
     },
-    "./react": {
-      "types": "./react.d.ts",
-      "import": "./react.js"
+    "./globs": {
+      "types": "./dist/globs.d.mts",
+      "import": "./dist/globs.mjs"
+    },
+    "./oxfmt": {
+      "types": "./dist/oxfmt.d.mts",
+      "import": "./dist/oxfmt.mjs"
+    },
+    "./oxlint": {
+      "types": "./dist/oxlint.d.mts",
+      "import": "./dist/oxlint.mjs"
     },
     "./prettier.json": "./prettier.json"
   },
-  "files": [
-    "index.js",
-    "index.d.ts",
-    "prettier.json",
-    "react.js",
-    "react.d.ts"
-  ],
-  "private": false,
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "scripts": {
-    "build": "tsdown && prettier --write .",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "lint": "eslint .",
+    "build": "tsdown",
+    "check": "pnpm build && pnpm format:check && pnpm typecheck && pnpm lint && pnpm test",
+    "format": "oxfmt .",
+    "format:check": "oxfmt --check .",
+    "lint": "pnpm lint:oxlint && pnpm lint:eslint",
+    "lint:eslint": "eslint .",
+    "lint:oxlint": "oxlint .",
+    "prepublishOnly": "pnpm check",
+    "release": "pnpm publish --dry-run && pnpm publish",
+    "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@eslint-react/eslint-plugin": "^5.7.4",
     "@eslint/js": "^10.0.1",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-import-resolver-typescript": "^4.4.4",
-    "eslint-plugin-import-x": "^4.16.2",
+    "eslint": "^10.8.0",
     "eslint-plugin-no-secrets": "^2.3.3",
-    "eslint-plugin-prettier": "^5.5.5",
     "eslint-plugin-react-hooks": "^7.1.1",
-    "globals": "^17.6.0",
-    "typescript-eslint": "^8.59.2"
+    "globals": "^17.8.0",
+    "typescript-eslint": "^8.65.0"
   },
   "devDependencies": {
-    "@types/node": "^25.6.2",
-    "eslint": "^10.3.0",
-    "prettier": "^3.8.3",
-    "tsdown": "^0.22.0",
-    "typescript": "^6.0.3"
+    "@types/node": "^22.20.1",
+    "oxfmt": "^0.61.0",
+    "oxlint": "^1.76.0",
+    "tsdown": "^0.22.14",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.10"
   },
   "peerDependencies": {
-    "eslint": "^10.3.0",
-    "prettier": "^3.8.3",
+    "oxfmt": "^0.61.0",
+    "oxlint": "^1.76.0",
+    "prettier": "^3.9.6",
     "typescript": ">=5.4.5"
   },
-  "prettier": "./prettier.json",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
-  }
+  "peerDependenciesMeta": {
+    "oxfmt": {
+      "optional": true
+    },
+    "oxlint": {
+      "optional": true
+    },
+    "prettier": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": "^22.18.0 || >=24.0.0"
+  },
+  "packageManager": "pnpm@11.18.0"
 }
