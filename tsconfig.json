@@ -6,16 +6,16 @@
     "moduleDetection": "force",
     "module": "preserve",
     "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "types": ["node"],
     "strict": true,
     "noUnusedLocals": true,
-    "declaration": true,
-    "emitDeclarationOnly": true,
+    "noEmit": true,
     "esModuleInterop": true,
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
     "skipLibCheck": true
   },
-  "include": ["src", "tsdown.config.ts"]
+  "include": ["src", "tests/*.test.ts", "tests/types.ts", "*.config.ts"]
 }
