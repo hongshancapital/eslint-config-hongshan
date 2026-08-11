@@ -407,7 +407,7 @@ export default defineConfig({
 });
 ```
 
-`react` 可以覆盖 preset 的 React 配套规则，但存在显式 `plugins` 时不会改写用户提供的数组；此时启用 React 也应确保 `plugins` 中包含 `react`。
+`react` 覆盖 preset 的默认值，控制 React 配套规则与 `react` 插件的增删：`react: false` 会从默认插件列表中移除 `react`（若存在）。但存在显式 `plugins` 时不会改写用户提供的数组；此时若想启用 React，应确保 `plugins` 中包含 `react`。
 
 `options.typeAware` 和 `options.typeCheck` 原样透传，本包不声明或安装 `oxlint-tsgolint`。
 

@@ -345,7 +345,9 @@ describe('Oxlint config', () => {
     expect(enabled.rules?.['react/no-array-index-key']).toBe('error');
     expect(disabled.plugins).toEqual(['react']);
     expect(disabled.rules?.['react/no-array-index-key']).toBeUndefined();
-    expect(disabledPresetRules.plugins).toEqual(OXLINT_DEFAULT_PLUGINS.frontend);
+    expect(disabledPresetRules.plugins).toEqual(
+      OXLINT_DEFAULT_PLUGINS.frontend.filter((plugin) => plugin !== 'react'),
+    );
     expect(disabledPresetRules.rules?.['react/no-array-index-key']).toBeUndefined();
   });
 

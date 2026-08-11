@@ -39,7 +39,13 @@ export const OXLINT_DEFAULT_PLUGINS = Object.freeze({
 function getDefaultPlugins(preset: OxlintPreset, reactEnabled: boolean): LintPlugin[] {
   const plugins: readonly LintPlugin[] = OXLINT_DEFAULT_PLUGINS[preset];
 
-  return reactEnabled && !plugins.includes('react') ? [...plugins, 'react'] : [...plugins];
+  // `react` 的增删由 `reactEnabled` 显式控制，确保 `react: false` 能真正移除 react 插件。
+  // oxlint-disable-next-line no-nested-ternary
+  return reactEnabled
+    ? plugins.includes('react')
+      ? [...plugins]
+      : [...plugins, 'react']
+    : plugins.filter((plugin) => plugin !== 'react');
 }
 
 function restrictGlobal(name: string) {
@@ -88,14 +94,7 @@ const baseRules = {
   'import/no-duplicates': 'error',
   'import/no-mutable-exports': 'error',
   'typescript/adjacent-overload-signatures': 'error',
-  'typescript/consistent-type-imports': [
-    'error',
-    {
-      disallowTypeAnnotations: false,
-      fixStyle: 'separate-type-imports',
-      prefer: 'type-imports',
-    },
-  ],
+  'typescript/consistent-type-imports': 'error',
   'typescript/method-signature-style': ['error', 'property'],
   'typescript/no-inferrable-types': 'error',
   'typescript/no-unused-vars': [
@@ -113,7 +112,7 @@ const baseRules = {
 const reactRules = {
   'react-hooks/exhaustive-deps': 'off',
   'react-hooks/rules-of-hooks': 'off',
-  'react/jsx-no-literals': ['error', { restrictedAttributes: ['src'] }],
+  'react/jsx-no-literals': 'error',
   'react/no-array-index-key': 'error',
 } satisfies ConfigField<'rules'>;
 
