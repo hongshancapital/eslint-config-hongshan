@@ -4,6 +4,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 
+import js from '@eslint/js';
 import { defineConfig as defineEslintConfig } from 'eslint/config';
 
 import { ignores } from './configs/ignores';
@@ -11,11 +12,12 @@ import { javascript } from './configs/javascript';
 import {
   buildDisabledOxlintRulesFromRuntimeConfig,
   buildOxlintRuleMetadata,
+  type OxlintRuleMetadataMap,
   type OxlintRuntimeConfig,
 } from './configs/oxlint-pairing';
 import { react } from './configs/react';
 import { loadTypescriptEslint, typescript } from './configs/typescript';
-import type { FlatConfigArray, FlatConfigInput, Options } from './types';
+import type { FlatConfig, FlatConfigArray, FlatConfigInput, Options } from './types';
 
 const OXLINT_CONFIG_FILES = ['oxlint.config.ts', 'oxlint.config.mts'];
 const execFileAsync = promisify(execFile);
@@ -27,6 +29,16 @@ function validateOptions(options: Options): void {
 
   if (unknownOption) {
     throw new Error(`Unknown defineConfig option "${unknownOption}"`);
+  }
+
+  if (
+    options.typescript !== undefined &&
+    options.typescript !== 'recommended' &&
+    options.typescript !== 'strict'
+  ) {
+    throw new Error(
+      `Invalid typescript option "${options.typescript}". Use 'recommended' or 'strict'.`,
+    );
   }
 }
 
@@ -122,14 +134,18 @@ async function loadOxlintRuleInventory(oxlintBin: string): Promise<unknown> {
   }
 }
 
-async function buildDisabledOxlintRules(
+type OxlintPairingData = {
+  config: OxlintRuntimeConfig;
+  metadata: OxlintRuleMetadataMap;
+};
+
+async function loadOxlintPairingData(
   configFile: string | URL | undefined,
-  includeTypescriptAliases: boolean,
-): Promise<FlatConfigArray> {
+): Promise<OxlintPairingData | null> {
   const filePath = resolveConfigFile(configFile);
 
   if (!filePath) {
-    return [];
+    return null;
   }
 
   const extension = path.extname(filePath);
@@ -160,14 +176,46 @@ async function buildDisabledOxlintRules(
       `Oxlint --print-config returned invalid JSON for ${filePath}`,
     ),
     loadOxlintRuleInventory(oxlintBin),
-    includeTypescriptAliases ? loadTypescriptEslint() : undefined,
+    loadTypescriptEslint(),
   ]);
-  const typescriptRules = typescriptEslint
-    ? (typescriptEslint.default.plugin as unknown as { rules?: unknown }).rules
-    : undefined;
+  const typescriptRules = (typescriptEslint.default.plugin as unknown as { rules?: unknown }).rules;
   const metadata = buildOxlintRuleMetadata(inventory, typescriptRules);
 
-  return buildDisabledOxlintRulesFromRuntimeConfig(config as OxlintRuntimeConfig, metadata);
+  return { config: config as OxlintRuntimeConfig, metadata };
+}
+
+/**
+ * Collects the names of every rule ESLint can resolve from the assembled configs:
+ * built-in core rules (from `@eslint/js`) plus every rule exposed by a registered
+ * plugin. Used to prevent the Oxlint pairing layer from emitting `'off'` for
+ * rules whose ESLint plugin is not installed (which would mislead consumers into
+ * referencing them in `eslint-disable` comments).
+ */
+function collectRegisteredRuleNames(configs: ReadonlyArray<FlatConfig>): Set<string> {
+  const ruleNames = new Set<string>();
+
+  for (const ruleName of Object.keys(js.configs.all.rules)) {
+    ruleNames.add(ruleName);
+  }
+
+  for (const config of configs) {
+    if (!config.plugins) {
+      continue;
+    }
+
+    for (const [pluginName, plugin] of Object.entries(config.plugins)) {
+      const rules =
+        plugin && typeof plugin === 'object' ? (plugin as { rules?: unknown }).rules : undefined;
+
+      if (rules && typeof rules === 'object') {
+        for (const ruleName of Object.keys(rules as Record<string, unknown>)) {
+          ruleNames.add(`${pluginName}/${ruleName}`);
+        }
+      }
+    }
+  }
+
+  return ruleNames;
 }
 
 export async function defineConfig(
@@ -177,15 +225,30 @@ export async function defineConfig(
   validateOptions(options);
 
   const { ignores: userIgnores = [], oxlintConfigFile } = options;
-  const [disabledOxlintRules, typescriptConfigs, reactConfigs] = await Promise.all([
-    buildDisabledOxlintRules(oxlintConfigFile, options.typescript !== false),
+  const [oxlintData, typescriptConfigs, reactConfigs] = await Promise.all([
+    loadOxlintPairingData(oxlintConfigFile),
     typescript(options),
     react(options),
   ]);
 
+  const jsConfigs = javascript();
+  const registeredRuleNames = collectRegisteredRuleNames([
+    ...jsConfigs,
+    ...typescriptConfigs,
+    ...reactConfigs,
+  ]);
+
+  const disabledOxlintRules = oxlintData
+    ? buildDisabledOxlintRulesFromRuntimeConfig(
+        oxlintData.config,
+        oxlintData.metadata,
+        registeredRuleNames,
+      )
+    : [];
+
   return defineEslintConfig([
     ignores(userIgnores),
-    ...javascript(),
+    ...jsConfigs,
     ...typescriptConfigs,
     ...reactConfigs,
     ...disabledOxlintRules.filter((config) => config.rules !== undefined),

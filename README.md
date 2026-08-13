@@ -117,6 +117,7 @@ import { defineConfig } from '@hongshancapital/eslint-config-hongshan/oxlint';
 
 export default defineConfig({
   preset: 'frontend',
+  strict: true,
   ignorePatterns: ['generated/**'],
 });
 ```
@@ -220,7 +221,7 @@ AI Agent 应区分“配置无法加载”和“配置已生效但发现代码�
 import { defineConfig } from '@hongshancapital/eslint-config-hongshan';
 
 export default defineConfig(
-  { typescript: true },
+  { typescript: 'recommended' },
   {
     rules: {
       'no-warning-comments': 'warn',
@@ -252,9 +253,9 @@ oxlint --rules --format=json
 
 只有 runtime 中实际开启且存在 ESLint 等价实现的规则会生成新的 ESLint `off`。根级最终状态为 `off` 的规则、未加载 plugin 的规则，以及未启用 Oxlint type-aware runtime 的 type-aware 规则不会生成 `off`；override 如何收回根级 rule owner 见下文。
 
-默认启用 TypeScript ESLint 时，一个 Oxlint rule 可能关闭多个 ESLint aliases，例如：
+TypeScript ESLint 始终启用，一个 Oxlint rule 可能关闭多个 ESLint aliases，例如：
 
-- `no-unused-vars` → `no-unused-vars`、`@typescript-eslint/no-unused-vars`（`typescript !== false`）
+- `no-unused-vars` → `no-unused-vars`、`@typescript-eslint/no-unused-vars`
 - `import/no-duplicates` → `import/no-duplicates`、`import-x/no-duplicates`
 - `react/rules-of-hooks` → `react-hooks/rules-of-hooks`
 - `react/only-export-components` → `react/only-export-components`、`react-refresh/only-export-components`
@@ -355,6 +356,7 @@ import { defineConfig } from '@hongshancapital/eslint-config-hongshan/oxlint';
 
 export default defineConfig({
   preset: 'backend',
+  strict: true,
   options: {
     typeAware: true,
   },
@@ -383,6 +385,7 @@ export default defineConfig({
 - 当前不支持会改变 plugin 集合的 Oxlint overrides，也不支持外部 Oxlint JavaScript plugins；遇到 `override.plugins`、override `jsPlugins` 或非空根 `jsPlugins` 时会报错。
 - `oxc` 专属规则和未知 rule scope 没有可靠的 ESLint 对应关系，会被跳过。
 - 对 `.vue`、`.svelte` 和 `.astro`，少量规则不会派生 ESLint `off`；本包不会因此自动配置这些文件所需的 ESLint parser 或 processor。
+- `no-dupe-args`、`no-octal` 和 `no-undef` 有意保留在 ESLint：前两条在 Oxlint 中无等价实现；`no-undef` 的 globals 语义在两个 linter 间不一致（Oxlint env 按 preset 划分，ESLint 同时注入 browser 和 node globals），下沉会造成假阳性。此外 `no-undef` 在 TypeScript 文件中由 typescript-eslint recommended 额外关闭（`tsc` 已覆盖该检查），JavaScript 文件中仍由 ESLint 执行。
 
 ## Oxlint 配置参考
 
@@ -391,7 +394,9 @@ export default defineConfig({
 - `frontend`：Browser + ES2024，默认启用 React。
 - `backend`：Node.js + ES2024，默认不启用 React。
 
-默认整体开启的 category 只有 `correctness: 'error'`；此外还启用本包维护的显式规则，包括经过验证的 Nursery `import/export`。`categories`、`env` 和 `rules` 按 key 合并，用户值优先；`ignorePatterns` 和 `overrides` 追加在默认值之后。
+默认整体开启的 category 只有 `correctness: 'error'`；此外还启用本包维护的显式规则，覆盖了 `eslint:recommended` 和 `typescript-eslint` 的 recommended 层中所有在 Oxlint 有等价实现的规则，以及经过验证的 Nursery `import/export`。配对后 ESLint 只保留 Oxlint 无等价实现或语义不等价的规则（`no-dupe-args`、`no-octal`、`no-undef`）。`categories`、`env` 和 `rules` 按 key 合并，用户值优先；`ignorePatterns` 和 `overrides` 追加在默认值之后。
+
+`strict` 控制是否额外启用 `typescript-eslint` strict 层独有的规则（`no-useless-constructor`、`typescript/no-dynamic-delete`、`typescript/no-extraneous-class`、`typescript/no-invalid-void-type`、`typescript/no-non-null-asserted-nullish-coalescing`、`typescript/prefer-literal-enum-member`、`typescript/unified-signatures`）。默认 `false`，与 ESLint 侧 `typescript: 'recommended'` 对应；设为 `true` 时与 `typescript: 'strict'` 对应。Oxlint 无法感知 ESLint 档位，两侧需分别声明以保持一致。
 
 未设置 `plugins` 时使用 `OXLINT_DEFAULT_PLUGINS[preset]`。显式 `plugins` 与 Oxlint 原生行为一致，会完整替换默认列表，`[]` 也有效。要追加 plugin，应先展开对应 preset 的默认值：
 
@@ -431,18 +436,18 @@ export default defineConfig(
 
 Flat Config 参数可以是对象或嵌套数组。它们位于内置配置和 Oxlint 派生配置之后，遵循 ESLint 原生级联合并语义。默认 language options 使用最新 ECMAScript、ES modules，以及 Browser 和 Node.js globals。
 
-| 选项               | 类型                                              | 默认     | 说明                                                                    |
-| ------------------ | ------------------------------------------------- | -------- | ----------------------------------------------------------------------- |
-| `ignores`          | `readonly string[]`                               | `[]`     | 追加到默认生成目录之后的全局 ignore                                     |
-| `oxlintConfigFile` | `string \| URL`                                   | 自动查找 | 显式选择用于规则配对的 `.ts` 或 `.mts` Oxlint 配置                      |
-| `react`            | `boolean`                                         | `false`  | 启用 React、JSX parser 选项和 TSX naming fallback                       |
-| `reactHooks`       | `'core' \| 'recommended' \| 'recommended-latest'` | `'core'` | React Hooks 规则档位；仅在 `react: true` 时生效                         |
-| `typescript`       | `boolean \| 'strict'`                             | `true`   | `true` 使用 recommended；`'strict'` 使用 strict；`false` 禁用 TS parser |
+| 选项               | 类型                                              | 默认            | 说明                                                               |
+| ------------------ | ------------------------------------------------- | --------------- | ------------------------------------------------------------------ |
+| `ignores`          | `readonly string[]`                               | `[]`            | 追加到默认生成目录之后的全局 ignore                                |
+| `oxlintConfigFile` | `string \| URL`                                   | 自动查找        | 显式选择用于规则配对的 `.ts` 或 `.mts` Oxlint 配置                 |
+| `react`            | `boolean`                                         | `false`         | 启用 React、JSX parser 选项                                        |
+| `reactHooks`       | `'core' \| 'recommended' \| 'recommended-latest'` | `'core'`        | React Hooks 规则档位；仅在 `react: true` 时生效                    |
+| `typescript`       | `'recommended' \| 'strict'`                       | `'recommended'` | `recommended` 使用 recommended preset；`strict` 使用 strict preset |
 
-`typescript: true` 会启用 typescript-eslint parser、plugin 和非 type-aware 的
-recommended preset，但不会读取 tsconfig 或建立 TypeScript Program。`'strict'` 同样
-只启用非 type-aware 的 strict preset。需要类型信息的 lint rules 应由 Oxlint
-type-aware 执行；`typescript: false` 会禁用整个 TypeScript ESLint 配置。
+`typescript` 控制 typescript-eslint parser、plugin 和非 type-aware preset。配对模式下
+Oxlint 已拥有 strict 独有的规则，两档无可观测差异；纯 ESLint 模式（未安装 Oxlint）下档位决定实际
+启用的规则集。两种模式都不会读取 tsconfig 或建立 TypeScript Program；需要类型信息的 lint rules
+应由 Oxlint type-aware 执行。
 
 ## 共享 Globs
 

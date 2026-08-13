@@ -221,6 +221,7 @@ function applyRuntimeRules(
   rules: RuleMap,
   typeAware: boolean,
   metadata: OxlintRuleMetadataMap,
+  registeredRuleNames?: ReadonlySet<string>,
 ): void {
   const disabledRules = rules;
 
@@ -232,9 +233,21 @@ function applyRuntimeRules(
     }
 
     for (const eslintRule of ruleMetadata.eslintRules) {
+      // Only emit disable directives for rules whose ESLint plugin is actually
+      // registered. Setting an unregistered rule to `'off'` is harmless on its
+      // own, but it misleads consumers into thinking the rule is owned by ESLint
+      // and safe to reference in `eslint-disable` comments — which then fail
+      // with "Definition for rule 'X' was not found" in ESLint v10.
+      if (registeredRuleNames && !registeredRuleNames.has(eslintRule)) {
+        continue;
+      }
+
       if (isActive(value)) {
         disabledRules[eslintRule] = 'off';
       } else if (isInactive(value)) {
+        // `eslintRule` is a controlled rule name from the metadata map, not an
+        // arbitrary user key, so dynamic deletion is safe here.
+        // oxlint-disable-next-line typescript/no-dynamic-delete
         delete disabledRules[eslintRule];
       }
     }
@@ -284,6 +297,7 @@ function appendRuleConfigs(
 export function buildDisabledOxlintRulesFromRuntimeConfig(
   config: OxlintRuntimeConfig,
   metadata: OxlintRuleMetadataMap,
+  registeredRuleNames?: ReadonlySet<string>,
 ): FlatConfigArray {
   if (!isObject(config) || !isObject(config.rules)) {
     throw new TypeError('Oxlint --print-config returned an unexpected configuration shape.');
@@ -299,7 +313,7 @@ export function buildDisabledOxlintRulesFromRuntimeConfig(
   const configs: FlatConfigArray = [];
   const rootRules: RuleMap = {};
 
-  applyRuntimeRules(config.rules, rootRules, typeAware, metadata);
+  applyRuntimeRules(config.rules, rootRules, typeAware, metadata, registeredRuleNames);
   appendRuleConfigs(configs, 'oxlint/from-runtime-config', rootRules);
 
   for (const [index, override] of (config.overrides ?? []).entries()) {
@@ -319,7 +333,7 @@ export function buildDisabledOxlintRulesFromRuntimeConfig(
     const overrideRules: RuleMap = {};
 
     if (override.rules) {
-      applyRuntimeRules(override.rules, overrideRules, typeAware, metadata);
+      applyRuntimeRules(override.rules, overrideRules, typeAware, metadata, registeredRuleNames);
     }
 
     appendRuleConfigs(

@@ -30,10 +30,11 @@ export interface Options {
   reactHooks?: ReactHooksPreset;
 
   /**
-   * TypeScript 规则档位。`true` = 'recommended'；`false` 同时禁用 TypeScript parser。
-   * @default true
+   * TypeScript 规则档位。配对模式下 Oxlint 已拥有 strict 独有的规则，两档无可观测差异；
+   * 纯 ESLint 模式下档位决定实际启用的规则集。
+   * @default 'recommended'
    */
-  typescript?: boolean | 'strict';
+  typescript?: 'recommended' | 'strict';
 }
 
 export type { Linter };

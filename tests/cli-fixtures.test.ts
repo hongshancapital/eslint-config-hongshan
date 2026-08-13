@@ -38,6 +38,8 @@ describe('Oxlint CLI fixtures', () => {
     ['javascript/invalid/no-useless-rename.ts', 'eslint(no-useless-rename)'],
     ['javascript/invalid/unused-var.ts', 'eslint(no-unused-vars)'],
     ['typescript/invalid/consistent-type-imports.ts', 'typescript(consistent-type-imports)'],
+    ['typescript/invalid/no-explicit-any.ts', 'typescript(no-explicit-any)'],
+    ['typescript/invalid/no-non-null-assertion.ts', 'typescript(no-non-null-assertion)'],
     ['imports/invalid/duplicate.ts', 'import(no-duplicates)'],
     ['react/invalid/array-index-key.tsx', 'react(no-array-index-key)'],
   ])('reports %s as %s', (file, expectedRule) => {
