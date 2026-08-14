@@ -145,7 +145,7 @@ describe('Oxlint and ESLint rule ownership', () => {
       new Set(['eqeqeq']),
     );
 
-    const rules = result[0]?.rules;
+    const rules = result.at(0)?.rules;
     expect(rules?.eqeqeq).toBe('off');
     expect(rules?.['react/no-array-index-key']).toBeUndefined();
     expect(rules?.['unicorn/prefer-at']).toBeUndefined();
@@ -164,7 +164,7 @@ describe('Oxlint and ESLint rule ownership', () => {
     const eslint = await createEslint(new URL('./override-off.config.ts', fixturesDirectory));
     const config = await eslint.calculateConfigForFile('example.js');
 
-    expect(config?.rules.eqeqeq?.[0]).toBe(0);
+    expect(config?.rules.eqeqeq?.at(0)).toBe(0);
   });
 
   it('uses Oxlint runtime defaults when deriving ESLint overlap', async () => {
@@ -175,7 +175,7 @@ describe('Oxlint and ESLint rule ownership', () => {
 
     expect(oxlintResult.status).toBe(0);
     expect(oxlintConfig.rules['no-debugger']).toBe('warn');
-    expect(eslintConfig?.rules['no-debugger']?.[0]).toBe(0);
+    expect(eslintConfig?.rules['no-debugger']?.at(0)).toBe(0);
   });
 
   it('uses the installed Oxlint inventory and disables every registered ESLint alias', async () => {
@@ -184,7 +184,7 @@ describe('Oxlint and ESLint rule ownership', () => {
     const eslintConfig = await eslint.calculateConfigForFile('example.js');
 
     // `id-denylist` is a built-in ESLint core rule, so the pairing layer disables it.
-    expect(eslintConfig?.rules['id-denylist']?.[0]).toBe(0);
+    expect(eslintConfig?.rules['id-denylist']?.at(0)).toBe(0);
     // `eslint-plugin-import` / `eslint-plugin-import-x` are not installed in this
     // package, so their rules are skipped instead of being set to `'off'`.
     expect(eslintConfig?.rules['import/no-duplicates']).toBeUndefined();
@@ -198,8 +198,8 @@ describe('Oxlint and ESLint rule ownership', () => {
     const eslintConfig = await eslint.calculateConfigForFile('example.ts');
 
     expect(oxlintConfig.rules['no-unused-vars']).toBe('warn');
-    expect(eslintConfig?.rules['no-unused-vars']?.[0]).toBe(0);
-    expect(eslintConfig?.rules['@typescript-eslint/no-unused-vars']?.[0]).toBe(0);
+    expect(eslintConfig?.rules['no-unused-vars']?.at(0)).toBe(0);
+    expect(eslintConfig?.rules['@typescript-eslint/no-unused-vars']?.at(0)).toBe(0);
   });
 
   it('uses TypeScript ESLint metadata to disable every core-rule extension', async () => {
@@ -218,8 +218,8 @@ describe('Oxlint and ESLint rule ownership', () => {
 
     for (const [eslintRule, typescriptRule] of extendedRules) {
       expect(oxlintConfig.rules[eslintRule]).toBe('deny');
-      expect(eslintConfig?.rules[eslintRule]?.[0]).toBe(0);
-      expect(eslintConfig?.rules[`@typescript-eslint/${typescriptRule}`]?.[0]).toBe(0);
+      expect(eslintConfig?.rules[eslintRule]?.at(0)).toBe(0);
+      expect(eslintConfig?.rules[`@typescript-eslint/${typescriptRule}`]?.at(0)).toBe(0);
     }
   });
 
@@ -230,7 +230,7 @@ describe('Oxlint and ESLint rule ownership', () => {
     const eslintConfig = await eslint.calculateConfigForFile('example.js');
 
     expect(oxlintConfig.rules['no-undef']).toBe('deny');
-    expect(eslintConfig?.rules['no-undef']?.[0]).toBe(0);
+    expect(eslintConfig?.rules['no-undef']?.at(0)).toBe(0);
   });
 
   it('disables type-aware ESLint rules when Oxlint type-aware runtime is enabled', async () => {
@@ -243,7 +243,7 @@ describe('Oxlint and ESLint rule ownership', () => {
 
     expect(oxlintConfig.options?.typeAware).toBe(true);
     expect(oxlintConfig.rules['typescript/await-thenable']).toBe('warn');
-    expect(eslintConfig?.rules['@typescript-eslint/await-thenable']?.[0]).toBe(0);
+    expect(eslintConfig?.rules['@typescript-eslint/await-thenable']?.at(0)).toBe(0);
   });
 
   it('does not disable rules discarded by the Oxlint runtime', async () => {
@@ -302,8 +302,8 @@ describe('Oxlint and ESLint rule ownership', () => {
       'eslint(no-debugger)',
     );
     expect(excludedOxlint.result.status).toBe(0);
-    expect(includedConfig?.rules['no-debugger']?.[0]).toBe(0);
-    expect(excludedConfig?.rules['no-debugger']?.[0]).toBe(2);
+    expect(includedConfig?.rules['no-debugger']?.at(0)).toBe(0);
+    expect(excludedConfig?.rules['no-debugger']?.at(0)).toBe(2);
   });
 
   it.each(['extends-order.config.ts', 'extends-order.config.mts'])(
@@ -319,8 +319,8 @@ describe('Oxlint and ESLint rule ownership', () => {
       expect(result.status).toBe(1);
       expect(codes).toContain('eslint(no-debugger)');
       expect(codes).not.toContain('eslint(no-undef)');
-      expect(config?.rules['no-debugger']?.[0]).toBe(0);
-      expect(config?.rules['no-undef']?.[0]).toBe(2);
+      expect(config?.rules['no-debugger']?.at(0)).toBe(0);
+      expect(config?.rules['no-undef']?.at(0)).toBe(2);
     },
   );
 
@@ -337,8 +337,8 @@ describe('Oxlint and ESLint rule ownership', () => {
       expect(result.status).toBe(1);
       expect(codes).toContain('eslint(eqeqeq)');
       expect(codes).not.toContain('eslint(no-undef)');
-      expect(config?.rules.eqeqeq?.[0]).toBe(0);
-      expect(config?.rules['no-undef']?.[0]).toBe(2);
+      expect(config?.rules.eqeqeq?.at(0)).toBe(0);
+      expect(config?.rules['no-undef']?.at(0)).toBe(2);
     },
   );
 });
@@ -380,7 +380,7 @@ describe('Oxlint rule coverage', () => {
     }
 
     const isActive = (value: unknown) => {
-      const severity = Array.isArray(value) ? value[0] : value;
+      const severity = Array.isArray(value) ? value.at(0) : value;
 
       return ['error', 'warn', 1, 2].includes(severity as never);
     };
@@ -423,7 +423,7 @@ describe('Oxlint rule coverage', () => {
     const oxlintActive = new Set(
       Object.entries(output.rules as Record<string, unknown>)
         .filter(([, value]) => {
-          const severity = Array.isArray(value) ? value[0] : value;
+          const severity = Array.isArray(value) ? value.at(0) : value;
           return ['deny', 'error', 'warn', 1, 2].includes(severity as never);
         })
         .map(([name]) => name),

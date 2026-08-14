@@ -68,7 +68,7 @@ function isObject(value: unknown): value is Record<string, unknown> {
 }
 
 function getSeverity(value: unknown): unknown {
-  return Array.isArray(value) ? value[0] : value;
+  return Array.isArray(value) ? value.at(0) : value;
 }
 
 function isActive(value: unknown): boolean {

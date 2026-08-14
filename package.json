@@ -1,6 +1,6 @@
 {
   "name": "@hongshancapital/eslint-config-hongshan",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "Unified ESLint, Oxlint, and formatter configuration",
   "license": "UNLICENSED",
   "author": "Gao Sun",

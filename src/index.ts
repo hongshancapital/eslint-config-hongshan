@@ -66,7 +66,7 @@ function resolveConfigFile(configFile?: string | URL): string | undefined {
     );
   }
 
-  return candidates[0];
+  return candidates.at(0);
 }
 
 async function runOxlintJson(

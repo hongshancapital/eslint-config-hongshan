@@ -93,6 +93,7 @@ const baseRules = {
   ],
   'unicorn/no-array-reverse': ['error', { allowExpressionStatement: false }],
   'unicorn/no-array-sort': ['error', { allowExpressionStatement: false }],
+  'unicorn/prefer-at': ['error', { checkAllIndexAccess: true }],
   'import/export': 'error',
   'import/first': 'error',
   'import/no-commonjs': 'error',
