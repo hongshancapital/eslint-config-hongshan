@@ -391,7 +391,7 @@ describe('Oxfmt config', () => {
     expect(config).toMatchObject({
       printWidth: 100,
       singleQuote: true,
-      sortImports: true,
+      sortImports: false,
       sortPackageJson: true,
       sortTailwindcss: true,
     });

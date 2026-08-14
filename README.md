@@ -485,7 +485,7 @@ export default defineConfig(
 
 ### Oxfmt
 
-`/oxfmt` 默认开启 import、`package.json` 和 Tailwind CSS class 排序：
+`/oxfmt` 默认开启 `package.json` 和 Tailwind CSS class 排序。import 排序（`sortImports`）默认**关闭**：CSS Modules 的样式导入顺序决定层叠优先级，后导入覆盖先导入，而 Oxfmt 的 import 排序无法对样式导入组保持源序（组内强制按字母序），自动重排会破坏层叠语义。需要排序的项目可显式开启，并自行承担样式导入顺序被重排的影响：
 
 ```ts
 // oxfmt.config.ts
@@ -493,7 +493,7 @@ import { defineConfig } from '@hongshancapital/eslint-config-hongshan/oxfmt';
 
 export default defineConfig({
   ignorePatterns: ['generated/**'],
-  sortImports: false,
+  // sortImports: true,
   // sortPackageJson: false,
   // sortTailwindcss: false,
 });

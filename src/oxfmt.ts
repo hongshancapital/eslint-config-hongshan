@@ -6,7 +6,7 @@ const defaults = {
   printWidth: 100,
   semi: true,
   singleQuote: true,
-  sortImports: true,
+  sortImports: false,
   sortPackageJson: true,
   sortTailwindcss: true,
   tabWidth: 2,
