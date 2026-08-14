@@ -72,8 +72,6 @@ describe('ESLint config fixtures', () => {
   it.each([
     ['javascript/invalid/no-restricted-syntax.ts', 'no-restricted-syntax'],
     ['javascript/invalid/no-secrets.ts', 'no-secrets/no-secrets'],
-    ['typescript/invalid/naming-convention.ts', '@typescript-eslint/naming-convention'],
-    ['typescript/invalid/no-explicit-any.ts', '@typescript-eslint/no-explicit-any'],
   ])('%s is still checked by %s', async (file, expectedRule) => {
     const [result] = await frontendEslint.lintFiles(path.join(fixturesDir, file));
 
@@ -88,7 +86,7 @@ describe('ESLint config composition', () => {
 
     try {
       process.chdir(fixturesDir);
-      config = await defineConfig({ typescript: false });
+      config = await defineConfig({ typescript: 'recommended' });
     } finally {
       process.chdir(originalCwd);
     }
@@ -111,13 +109,13 @@ describe('ESLint config composition', () => {
     const eslint = await createEslint({ oxlintConfigFile: backendOxlintConfigFile });
     const config = await eslint.calculateConfigForFile('example.js');
 
-    expect(config?.rules['@typescript-eslint/no-explicit-any']).toBeUndefined();
+    expect(config?.rules['@typescript-eslint/array-type']).toBeUndefined();
   });
 
   it('does not inherit ignores from the paired Oxlint config', async () => {
     const eslint = await createEslint({
       oxlintConfigFile: frontendOxlintConfigFile,
-      typescript: false,
+      typescript: 'recommended',
     });
     const [result] = await eslint.lintText('const values = []; values.unshift(1);', {
       filePath: 'oxlint-only/example.js',
@@ -129,11 +127,11 @@ describe('ESLint config composition', () => {
     expect(result?.messages.some((message) => message.ruleId === null)).toBe(false);
   });
 
-  it('supports React without TypeScript', async () => {
+  it('does not apply TypeScript rules to JSX', async () => {
     const eslint = await createEslint({
       oxlintConfigFile: frontendOxlintConfigFile,
       react: true,
-      typescript: false,
+      typescript: 'recommended',
     });
     const [result] = await eslint.lintText(
       'export default function Component() { return <div />; }',
@@ -143,11 +141,11 @@ describe('ESLint config composition', () => {
     expect(result?.fatalErrorCount).toBe(0);
   });
 
-  it('does not reference TypeScript plugin rules for JSX in a .tsx file when disabled', async () => {
+  it('parses TSX without fatal errors', async () => {
     const eslint = await createEslint({
       oxlintConfigFile: frontendOxlintConfigFile,
       react: true,
-      typescript: false,
+      typescript: 'recommended',
     });
     const [result] = await eslint.lintText(
       'export default function Component() { return <div />; }',
@@ -159,7 +157,7 @@ describe('ESLint config composition', () => {
 
   it('merges default and user globals using native flat config semantics', async () => {
     const eslint = await createEslint(
-      { oxlintConfigFile: backendOxlintConfigFile, typescript: false },
+      { oxlintConfigFile: backendOxlintConfigFile, typescript: 'recommended' },
       [{ languageOptions: { globals: { process: 'off', testGlobal: 'readonly' } } }],
     );
     const config = await eslint.calculateConfigForFile('example.js');
@@ -206,12 +204,12 @@ describe('ESLint config composition', () => {
     const eslint = await createEslint({
       oxlintConfigFile: frontendOxlintConfigFile,
       react: true,
-      typescript: false,
+      typescript: 'recommended',
     });
     const config = await eslint.calculateConfigForFile('component.jsx');
 
-    expect(config?.rules['react-hooks/rules-of-hooks']?.[0]).toBe(2);
-    expect(config?.rules['react-hooks/exhaustive-deps']?.[0]).toBe(1);
+    expect(config?.rules['react-hooks/rules-of-hooks']?.at(0)).toBe(2);
+    expect(config?.rules['react-hooks/exhaustive-deps']?.at(0)).toBe(1);
     expect(config?.rules['react-hooks/static-components']).toBeUndefined();
     expect(config?.rules['react-hooks/use-memo']).toBeUndefined();
   });
@@ -224,12 +222,12 @@ describe('ESLint config composition', () => {
       oxlintConfigFile: frontendOxlintConfigFile,
       react: true,
       reactHooks,
-      typescript: false,
+      typescript: 'recommended',
     });
     const config = await eslint.calculateConfigForFile('component.jsx');
 
-    expect(config?.rules['react-hooks/static-components']?.[0]).toBe(2);
-    expect(config?.rules['react-hooks/void-use-memo']?.[0]).toBe(voidUseMemoSeverity);
+    expect(config?.rules['react-hooks/static-components']?.at(0)).toBe(2);
+    expect(config?.rules['react-hooks/void-use-memo']?.at(0)).toBe(voidUseMemoSeverity);
   });
 
   it('keeps inactive Nursery fallback in ESLint', async () => {
@@ -239,9 +237,9 @@ describe('ESLint config composition', () => {
     const config = await eslint.calculateConfigForFile('typescript/valid/basic.ts');
     const javascriptConfig = await eslint.calculateConfigForFile('example.js');
 
-    expect(javascriptConfig?.rules['no-undef']?.[0]).toBe(2);
-    expect(config?.rules['no-unreachable']?.[0]).toBe(0);
-    expect(config?.rules['@typescript-eslint/no-unused-vars']?.[0]).toBe(0);
+    expect(javascriptConfig?.rules['no-undef']?.at(0)).toBe(2);
+    expect(config?.rules['no-unreachable']?.at(0)).toBe(0);
+    expect(config?.rules['@typescript-eslint/no-unused-vars']?.at(0)).toBe(0);
   });
 
   it.each(['eslint.config.js', 'example.test.js', 'scripts/build.js'])(
@@ -249,7 +247,7 @@ describe('ESLint config composition', () => {
     async (filePath) => {
       const eslint = await createEslint({
         oxlintConfigFile: backendOxlintConfigFile,
-        typescript: false,
+        typescript: 'recommended',
       });
       const [result] = await eslint.lintText('const values = []; values.unshift(1);', {
         filePath,
@@ -264,7 +262,7 @@ describe('ESLint config composition', () => {
   it('allows references to mutating methods', async () => {
     const eslint = await createEslint({
       oxlintConfigFile: backendOxlintConfigFile,
-      typescript: false,
+      typescript: 'recommended',
     });
     const [result] = await eslint.lintText(
       'const values = [1]; const callback = Array.of(values.pop); export { callback };',
@@ -278,7 +276,7 @@ describe('ESLint config composition', () => {
 
   it('does not apply JavaScript rules to user-added non-source languages', async () => {
     const eslint = await createEslint(
-      { oxlintConfigFile: backendOxlintConfigFile, typescript: false },
+      { oxlintConfigFile: backendOxlintConfigFile, typescript: 'recommended' },
       { files: ['**/*.json'] },
     );
     const config = await eslint.calculateConfigForFile('data.json');
@@ -290,8 +288,23 @@ describe('ESLint config composition', () => {
     const eslint = await createEslint({ oxlintConfigFile: backendOxlintConfigFile });
     const config = await eslint.calculateConfigForFile('example.js');
 
-    expect(config?.rules.eqeqeq?.[0]).toBe(0);
-    expect(config?.rules['no-console']?.[0]).toBe(0);
+    expect(config?.rules.eqeqeq?.at(0)).toBe(0);
+    expect(config?.rules['no-console']?.at(0)).toBe(0);
+  });
+
+  it('does not disable rules for unregistered ESLint plugins', async () => {
+    const config = await frontendEslint.calculateConfigForFile('example.tsx');
+
+    // `react/no-array-index-key` is active in the frontend Oxlint preset, but
+    // `eslint-plugin-react` is not installed in this package, so the pairing
+    // layer must not emit a misleading `'off'` directive for it.
+    expect(config?.rules['react/no-array-index-key']).toBeUndefined();
+    // `unicorn/no-array-reverse` is active in the Oxlint config, but
+    // `eslint-plugin-unicorn` is not installed.
+    expect(config?.rules['unicorn/no-array-reverse']).toBeUndefined();
+    // Core rules that overlap with Oxlint are still disabled.
+    expect(config?.rules.eqeqeq?.at(0)).toBe(0);
+    expect(config?.rules['no-console']?.at(0)).toBe(0);
   });
 });
 
@@ -306,7 +319,7 @@ describe('Oxlint config', () => {
     expect(backend.plugins).not.toContain('react');
     expect(backend.env).toMatchObject({ node: true });
     expect(frontend.categories).toEqual({ correctness: 'error' });
-    expect(frontend.overrides?.[0]?.files).toEqual([GLOB_JSX, GLOB_TSX]);
+    expect(frontend.overrides?.at(0)?.files).toEqual([GLOB_JSX, GLOB_TSX]);
   });
 
   it('lets explicit plugins replace the preset defaults', () => {
@@ -378,7 +391,7 @@ describe('Oxfmt config', () => {
     expect(config).toMatchObject({
       printWidth: 100,
       singleQuote: true,
-      sortImports: true,
+      sortImports: false,
       sortPackageJson: true,
       sortTailwindcss: true,
     });

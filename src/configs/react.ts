@@ -1,6 +1,6 @@
 import { defineConfig } from 'eslint/config';
 
-import { GLOB_SRC, GLOB_TSX } from '../globs';
+import { GLOB_SRC } from '../globs';
 import type { Options } from '../types';
 
 const CORE_REACT_HOOKS_RULES = [
@@ -26,21 +26,6 @@ export async function react(options: Options) {
           ),
         }
       : reactHooks.configs.flat[reactHooksPreset];
-  const reactTypescript =
-    options.typescript === false
-      ? []
-      : defineConfig([
-          {
-            name: '@hongshancapital/eslint-config-hongshan/react-typescript',
-            files: [GLOB_TSX],
-            rules: {
-              '@typescript-eslint/naming-convention': [
-                'error',
-                { selector: 'variable', format: ['camelCase', 'UPPER_CASE', 'PascalCase'] },
-              ],
-            },
-          },
-        ]);
 
   return defineConfig([
     {
@@ -53,6 +38,5 @@ export async function react(options: Options) {
         },
       },
     },
-    ...reactTypescript,
   ]);
 }

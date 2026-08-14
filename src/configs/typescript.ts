@@ -16,11 +16,7 @@ export function loadTypescriptEslint() {
 }
 
 export async function typescript(options: Options) {
-  const { typescript: tsOption = true } = options;
-
-  if (!tsOption) {
-    return [];
-  }
+  const { typescript: tsOption = 'recommended' } = options;
 
   const { default: tseslint } = await loadTypescriptEslint();
   const isStrict = tsOption === 'strict';
@@ -37,12 +33,6 @@ export async function typescript(options: Options) {
           ecmaVersion: 'latest',
           sourceType: 'module',
         },
-      },
-      rules: {
-        '@typescript-eslint/naming-convention': [
-          'error',
-          { selector: 'variable', format: ['camelCase', 'UPPER_CASE'] },
-        ],
       },
     },
   ]);
